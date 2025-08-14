@@ -1,37 +1,24 @@
 import express from "express";
+import mongoose from "mongoose";
 const app = express();
+import Game from "./models/Games.js";
 
 // Configurações do Express
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+//Iniciando a conexão com o banco de dados no MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/api-thegames");
+
 // Criando um retorno da API
-app.get("/", (req, res) => {
-  const games = [
-    {
-      title: "Delta",
-      year: "2024",
-      genre: "FPS",
-      plataform: "PC(Windows)",
-      price: 0,
-    },
-    {
-      title: "Diablo III",
-      year: "2009",
-      genre: "RPG",
-      plataform: "PC(Windows)",
-      price: 150,
-    },
-    {
-      title: "Tibia",
-      year: "1997",
-      genre: "MMORPG",
-      plataform: "PC(Windows)",
-      price: 0,
-    },
-    //Me recuso a colocar LOL
-  ];
-  res.json(games);
+app.get("/", async (req, res) => {
+  try {
+    const games = await Game.find();
+    res.status(200).json({ games: games }); // Código 200 : OK (Requisição bem sucedida.)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: `Internal error in server` });
+  }
 });
 
 // Rodando a API na porta 4000
