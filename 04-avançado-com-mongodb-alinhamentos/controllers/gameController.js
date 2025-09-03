@@ -16,8 +16,8 @@ const getAllgames = async (req, res) => {
 // Função para CADASTRAR jogos
 const createGame = async (req, res) => {
   try {
-    const { title, year, genre, platform, price } = req.body;
-    await gameService.Create(title, year, genre, platform, price);
+    const { title, year, price, description } = req.body;
+    await gameService.Create(title, year, price, description);
     res.sendStatus(201); // Cód. 201 (Created) : Recurso criado
   } catch (error) {
     console.log(error);
@@ -52,8 +52,14 @@ const updateGame = async (req, res) => {
   try {
     if (ObjectId.isValid(req.params.id)) {
       const id = req.params.id;
-      const { title, year, genre, platform, price } = req.body;
-      const game = await gameService.Update(id, title, year, genre, platform, price);
+      const { title, year, price, description } = req.body;
+      const game = await gameService.Update(
+        id,
+        title,
+        year,
+        price,
+        description
+      );
       res.status(200).json({ game }); // Código 200 (OK)
     } else {
       res.sendStatus(400); // Código 400 (BAD REQUEST)
