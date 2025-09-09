@@ -29,9 +29,7 @@ const loginUser = async (req, res) => {
       // Fazendo a validação
       if (user.password == password){
         // Gerando o token com JWT
-        jwt.sign({ id: user.id, email: user.email }),
-          JWTSecret,
-          { expiresIn: "48h" },
+        jwt.sign({ id: user.id, email: user.email }), JWTSecret, { expiresIn: "48h" },
           (error, token) => {
             if (error) {
               res
@@ -39,12 +37,13 @@ const loginUser = async (req, res) => {
                 .json({ error: "It not possible to generate the auth token" });
             } else {
               // Token gerado com sucesso
-              res.status(200).json({ token });
+              res.status(200).json({token});
             }
           }
-       }else{
+        }else{
+        // Senha INCORRETA  
         res.status(401).json({error: 'Invalid Credentials'})
-       };
+      };
     } else {
       res.status(404).json({ error: "User not found!" });
     }
@@ -53,4 +52,4 @@ const loginUser = async (req, res) => {
     res.sendStatus(500);
   }
 };
-export default { createUser, loginUser };
+export default { createUser, loginUser, JWTSecret };
