@@ -19,6 +19,7 @@ const createUser = async (req, res) => {
 };
 
 // FUNÇÃO para realizar o LOGIN
+// FUNÇÃO para realizar o LOGIN
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -29,7 +30,10 @@ const loginUser = async (req, res) => {
       // Fazendo a validação
       if (user.password == password){
         // Gerando o token com JWT
-        jwt.sign({ id: user.id, email: user.email }), JWTSecret, { expiresIn: "48h" },
+        jwt.sign(
+          { id: user.id, email: user.email }, // corrigido para colocar todos os argumentos dentro do sign
+          JWTSecret,
+          { expiresIn: "48h" },
           (error, token) => {
             if (error) {
               res
@@ -40,9 +44,10 @@ const loginUser = async (req, res) => {
               res.status(200).json({token});
             }
           }
-        }else{
+        );
+      } else {
         // Senha INCORRETA  
-        res.status(401).json({error: 'Invalid Credentials'})
+        res.status(401).json({error: 'Invalid Credentials'});
       };
     } else {
       res.status(404).json({ error: "User not found!" });
@@ -52,4 +57,5 @@ const loginUser = async (req, res) => {
     res.sendStatus(500);
   }
 };
+
 export default { createUser, loginUser, JWTSecret };
